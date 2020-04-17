@@ -20,19 +20,20 @@ function wpsol_init()
 	load_plugin_textdomain('wpsol', false, 'wpsol/languages');
 
 	// Gebruikersnaam veld toevoegen aan de login pagina
-	add_action('login_form', 'wpsol_wp_login_form');
-	add_filter('login_form_middle', 'wpsol_wp_login_form_middle');
+	add_action('login_form', 'wpsol_wp_login_form', 0);
+	add_filter('login_form_middle', 'wpsol_wp_login_form_middle', 0);
 
 	// Inhaken op het authenticatie process
-	add_filter('authenticate', 'wpsol_authenticate_username_password', 9);
+	add_filter('authenticate', 'wpsol_authenticate_username_password', 0);
 
 	// Geef extra links in de plugin-overzichtspagina
-	add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'wpsol_plugin_action_links');
+	add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'wpsol_plugin_action_links');
 
 	// Registreer sidebar widget
 	wp_register_sidebar_widget('wpsol_widget', 'SOL Sidebar Login', 'wpsol_sidebar_login');
 	wp_register_widget_control('wpsol_widget', 'SOL Sidebar Login', 'wpsol_sidebar_login_control');
 }
+
 add_action('plugins_loaded', 'wpsol_init');
 
 // Init wpsol-admin
@@ -40,10 +41,11 @@ function wpsol_admin_menu()
 {
 	add_options_page('wpSOL', 'wpSOL', 'manage_options', 'wpsol_settings', 'wpsol_admin_options');
 }
+
 add_action('admin_menu', 'wpsol_admin_menu');
 
 // add logout redirect
 add_action('wp_logout', 'wpsol_logout_redirect');
 
 // Setup defaults during installation
-register_activation_hook( __FILE__, 'wpsol_install');
+register_activation_hook(__FILE__, 'wpsol_install');
